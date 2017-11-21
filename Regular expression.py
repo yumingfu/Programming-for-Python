@@ -12,7 +12,8 @@ p = list(dict.keys())
 #print(p)
 for i in range(len(p)):
 #searchres = re.search(r'[A][a]*',p[i])
+    a = []
     if re.search('(?<=abc)ap',p[i]):
-        return a = p[i]
+        return a.append(p[i])
     #searchres = re.search('(?<=abc)ap',p[i])
-print(a)
+a.group(0)
