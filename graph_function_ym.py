@@ -23,10 +23,9 @@ def menu():
     """
     #print(""" press 1 for      """)
     print("please enter: ")
-    p = input()
-    q = Stock(Userinput(p).ticker)
-    print(q.price)
-
+    q = Stock(Userinput(input()).ticker)
+    #print(q.price)
+    q.graph()
 class Userinput:
     """ take user input and classfiy/categorize it
     match and display"""
@@ -48,7 +47,7 @@ class Stock:
         # self.lowsprice
         # self.n = pd.readdatacount row()
 
-    def graph():
+    def graph(self):
         """this will plot graph for every element that is the class stock"""
         plt.plot(self.price[:])
         #plt.xlim((-1, 5))
