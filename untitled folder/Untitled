@@ -1,0 +1,8 @@
+import pandas as pd
+import numpy as np
+
+transdat = pd.read_csv("GOOG.csv")
+transdat['Date'] = pd.to_datetime(transdat['Date'])
+print(type(transdat))
+transdat.set_index('Date',inplace=True)
+print(transdat.head())
