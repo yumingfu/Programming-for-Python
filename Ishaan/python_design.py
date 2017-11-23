@@ -1,4 +1,4 @@
- def printLine (text = ''):
+def printLine (text = ''):
     print('X {: ^47} X'.format(text))
 
 def printSelTitle (text = '', title = None):
