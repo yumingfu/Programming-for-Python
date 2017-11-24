@@ -11,7 +11,7 @@ def menu():
 
     # print(""" press 1 for      """)
     #print("please enter: ")
-    q = Stock(Csvfile("tsla","2017-05-01","2017-10-01").get_data())
+    q = Stock(Csvfile("tsla","2017-05-01","2016-10-01").get_data())
     # print(q.price)
     # q.graph()
     q.candlestick()

@@ -11,8 +11,7 @@ def menu():
 
     # print(""" press 1 for      """)
     #print("please enter: ")
-    print(Csvfile("aapl",timestart = "2017-09-01", timeend = "2016-10-01").get_data())
-    q = Stock(Csvfile("aapl",timestart = "2017-09-01", timeend = "2016-10-01").get_data())
+    q = Stock(Csvfile("tsla", timestart = "2017-09-01", timeend = "2016-10-01").get_data())
     # print(q.price)
     # q.graph()
     q.candlestick()
@@ -70,7 +69,7 @@ class Stock:
 
         # plt.close()
         # graph(data,"test.png")
-    def candlestick(self, stick = 1, otherseries = None):
+    def candlestick(self, stick = "day", otherseries = "Close"):
         """
         :param dat: pandas DataFrame object with datetime64 index, and float columns "Open", "High", "Low", and "Close", likely created via DataReader from "yahoo"
         :param stick: A string or number indicating the period of time covered by a single candlestick. Valid string inputs include "day", "week", "month", and "year", ("day" default), and any numeric input indicates the number of trading days included in a period
@@ -133,24 +132,15 @@ class Stock:
             ax.xaxis.set_minor_locator(alldays)
         else:
             weekFormatter = DateFormatter('%b %d, %Y')
-            ax.xaxis.set_major_formatter(weekFormatter)
+        ax.xaxis.set_major_formatter(weekFormatter)
 
         ax.grid(True)
         # Create the candelstick chart
 
-        candlestick_ohlc(ax, list(zip(list(date2num(plotdat.index.tolist())), plotdat["Open"].tolist(), plotdat["High"].tolist(),
+        #date2num(plotdat.index.tolist())), plotdat["Open"].tolist(), plotdat["High"].tolist(),
                           plotdat["Low"].tolist(), plotdat["Close"].tolist())),
                           colorup = "black", colordown = "red", width = stick * .4)
 
-        # Plot other series (such as moving averages) as lines
-        if otherseries != None:
-            if type(otherseries) != list:
-                otherseries = [otherseries]
-            self.x.loc[:,otherseries].plot(ax = ax, lw = 1.3, grid = True)
+        print(plotdat["Open"].tolist())
 
-        ax.xaxis_date()
-        ax.autoscale_view()
-        plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-
-        plt.show()
 menu()

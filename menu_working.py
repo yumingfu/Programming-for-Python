@@ -19,7 +19,7 @@ def printBox (*lines, title = None, showBottomBorder = False):
     if showBottomBorder:
         printBorder()
 def menu_1():
-    printBox('Stock Analysis - Choose your stock')
+    printBox('Stock Analysis - Choose your stock' , showBottomBorder = False)
     printBox('Are you ready to start?', '-' * 21,\
              'Press any key to continue', '-' * 21, showBottomBorder = True)
     printSelTitle('TASK1'), printSelTitle('TASK2'),\
