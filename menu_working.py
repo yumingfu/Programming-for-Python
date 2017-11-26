@@ -26,8 +26,8 @@ def printBox (*lines, title = None, showBottomBorder = False):
 def menu_1():
     printBox('Stock Analysis - Choose your stock' , showBottomBorder = False)
     printBox('Are you ready to start?', '-' * 21,\
-             'Press any key(except 1) to continue', '-' * 21,\
-             'Press 1 to quit' ,showBottomBorder = True)
+             'Enter any key(except 1) to continue', '-' * 21,\
+             'Enter 1 to quit' ,showBottomBorder = True)
     printSelTitle('TASK1'), printSelTitle('TASK2'),\
             printSelTitle('TASK3'), printSelTitle('TASK4'),\
             printSelTitle('TASK5'), print("X")
@@ -78,7 +78,6 @@ def menu_2():
 def menu_3():
     printBox('Please enter the stock name:','-' * 21,\
     'press 0 to go back!',showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
     p = input()
     for i in punctuation:
         p = p.replace(i,"")
@@ -89,7 +88,6 @@ def menu_3():
 def menu_4():
     printBox('Please enter the company name:','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
     p = input()
     for i in punctuation:
         p = p.replace(i,"")
@@ -113,8 +111,6 @@ def menu_5():
 def menu_6():
     printBox('Please enter the start year for the stock(in format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-    letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
     Y = input()
     for i in punctuation:
         Y = Y.replace(i,"")
@@ -126,8 +122,6 @@ def menu_6():
         printBox('Please enter the start month for the stock(in format MM):','-' * 21,\
         'press 0 to go back!', showBottomBorder = True)
         printBox('{}-MM-DD'.format(Y),showBottomBorder = True)
-        punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-        letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
         M = input()
         for i in punctuation:
             M = M.replace(i,"")
@@ -138,8 +132,6 @@ def menu_6():
         elif len(str(M)) == 2 and 0 < int(M) < 13:
             printBox('Please enter the start day for the stock(in format DD):','-' * 21,\
             'press 0 to go back!')
-            #punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-            #letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
             printBox('{}-{}-DD'.format(Y,M), showBottomBorder = True)
             D = input()
             for i in punctuation:
@@ -173,8 +165,6 @@ def menu_6():
 def menu_9():
     printBox('Please enter the end year for the stock(in format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-    letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
     y = input()
     for i in punctuation:
         y = y.replace(i,"")
@@ -186,8 +176,6 @@ def menu_9():
         printBox('Please enter the end month for the stock(in format MM):','-' * 21,\
         'press 0 to go back!')
         printBox('{}-MM-DD'.format(y), showBottomBorder = True)
-        punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-        letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
         m = input()
         for i in punctuation:
             m = m.replace(i,"")
@@ -199,8 +187,6 @@ def menu_9():
             printBox('Please enter the end day for the stock(in format DD):','-' * 21,\
             'press 0 to go back!', showBottomBorder = False)
             printBox('{}-{}-DD'.format(y,m), showBottomBorder = True)
-            punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-            letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
             d = input()
             for i in punctuation:
                 d = d.replace(i,"")
@@ -285,7 +271,6 @@ def menu_14():
 def menu_18():
     printBox('Please enter the stock name:','-' * 21,\
     'press 0 to go back!',showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
     p = input()
     for i in punctuation:
         p = p.replace(i,"")
@@ -297,7 +282,6 @@ def menu_18():
 def menu_19():
     printBox('Please enter the company name:','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
     p = input()
     for i in punctuation:
         p = p.replace(i,"")
@@ -308,8 +292,6 @@ def menu_19():
 def menu_22():
     printBox('Please enter the year of the predict date(in format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
-    punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-    letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
     Y = input()
     for i in punctuation:
         Y = Y.replace(i,"")
@@ -321,8 +303,6 @@ def menu_22():
         printBox('Please enter the month of the predict date(in format MM):','-' * 21,\
         'press 0 to go back!', showBottomBorder = True)
         printBox('{}-MM-DD'.format(Y),showBottomBorder = True)
-        punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-        letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
         M = input()
         for i in punctuation:
             M = M.replace(i,"")
@@ -333,8 +313,6 @@ def menu_22():
         elif len(str(M)) == 2 and 0 < int(M) < 13:
             printBox('Please enter the day of the predict date(in format DD):','-' * 21,\
             'press 0 to go back!')
-            punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
-            letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
             printBox('{}-{}-DD'.format(Y,M), showBottomBorder = True)
             D = input()
             for i in punctuation:
