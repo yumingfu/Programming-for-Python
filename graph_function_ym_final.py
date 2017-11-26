@@ -7,14 +7,17 @@
 ** Started on  Fri Nov 24 19:59:15 2017 Yuming Fu
 ** Last update Fri Nov 24 19:59:15 2017 Yuming Fu
 """
-
+import warnings
+warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter, WeekdayLocator, DayLocator, MO, date2num
 from matplotlib.finance import candlestick_ohlc
-from matplotlib.axes import Axes
+from sklearn.svm import SVR
 import numpy as np
 import pandas as pd
 import datetime
+from sklearn import linear_model
+
 
 def menu():
     """Input is input() return p = Getcsv( the real input )."""
@@ -22,55 +25,72 @@ def menu():
     # print(""" press 1 for      """)
     #print("please enter: ")
     #q = Stock(Csvfile("goog",timestart = "2017-05-01", timeend = "2017-10-01").get_data())
-    #q.graph()
-    #q.candlestick()
-    print(Userinput("GOOG", condition = True).a1)
+    # q.graph()
+    # q.candlestick()
+    #print(Companylist("Apple", case = True).a1)
+    #Stock(Csvfile("GOOG",timestart = "2017-05-01", timeend = "2017-07-31").download("Ishaan3")).candlestick()
+    #Predict(Csvfile("GOOG", timestart="2017-09-01", timeend="2017-10-01").get_data()).predict("2017-11-01")
+    Stock(Csvfile("GOOG",timestart = "2016-01-01", timeend = "2017-01-25").download("dummy")).graph_with_MA()
 
-class Userinput:
+class Ticker:
     """Self.correct_ticker_name ()
        self.possible_ticker(should be a list)
        self.possible_company_name(should be a list)"""
-    def __init__(self, symbol, condition = False):
-        company_list=pd.read_csv("http://www.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan0ge=nasdaq&render=download",usecols=[0,1,3])
+
+    def __init__(self, symbol, condition=False):
+        company_list = pd.read_csv(
+            "http://www.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan0ge=nasdaq&render=download", usecols=[0, 1, 3])
         self.company_list = pd.DataFrame(data=company_list)
-        user_input= symbol.strip().upper()
+        user_input = symbol.strip().upper()
         self.a1 = []
         if user_input in set(company_list['Symbol']) and condition == True:
-        #if self.company_list['Symbol'].str.match(str(user_input)) is True:
-            self.a1 = self.company_list[self.company_list['Symbol']== str(user_input)]
+            # if self.company_list['Symbol'].str.match(str(user_input)) is True:
+            self.a1 = self.company_list[self.company_list['Symbol'] == str(user_input)]
         else:
-            a1= self.company_list[self.company_list['Symbol'].str.contains(user_input[:-1])]
-            self.test= "False"
+            a1 = self.company_list[self.company_list['Symbol'].str.contains(user_input[:-1])]
+            self.test = "False"
             self.a1 = a1
 
 
 class Companylist:
-        def __init__():
-            companylist = pd.read_csv("http://www.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan0ge=nasdaq&render=download", usecols = [0,1,3])
-            self.companylist = pd.DateFrame(data=company_list)
+    def __init__(self, name, case=False):
+        companylist = pd.read_csv(
+            "http://www.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan0ge=nasdaq&render=download", usecols=[0, 1, 3])
+        self.companylist = pd.DataFrame(data=companylist)
+        user_input = name
+        self.a1 = []
+        self.a1 = self.companylist[self.companylist['Name'].str.contains(user_input, case=case)]
 
 
 class Csvfile:
     """Get csv file from """
-    def __init__(self, Ticker = "GOOG", timestart = "2017-09-01", timeend = "2017-11-01"):
+
+    def __init__(self, Ticker="GOOG", timestart="2017-09-01", timeend="2017-11-01"):
         assert pd.to_datetime(timeend) - pd.to_datetime(timestart) >= pd.Timedelta('0 days'),\
-        "sorry your enddate is earler than you startdate"
+            "sorry your enddate is earler than you startdate"
         self.ticker_name = Ticker.upper().strip()
-        self.startdt = datetime.datetime.strptime(timestart,'%Y-%m-%d')
+        self.startdt = datetime.datetime.strptime(timestart, '%Y-%m-%d')
         self.startmonth = (self.startdt.strftime("%b"))
-        self.enddt = datetime.datetime.strptime(timeend,'%Y-%m-%d')
+        self.enddt = datetime.datetime.strptime(timeend, '%Y-%m-%d')
         self.endmonth = (self.enddt.strftime("%b"))
+
     def get_data(self):
-        url1='http://finance.google.com/finance/historical?q='
-        url2='&startdate='
-        url3='&num=30&ei=NGoQWtDQFMGKUIuSsYgF&output=csv'
-        self.url = url1 + self.ticker_name + url2 + self.startmonth + '+' + str(self.startdt.day) + '%2C+' + str(self.startdt.year) + '&enddate=' + str(self.endmonth) + '+' + str(self.enddt.day) + '%2C+' + str(self.enddt.year) + url3
+        url1 = 'http://finance.google.com/finance/historical?q='
+        url2 = '&startdate='
+        url3 = '&num=30&ei=NGoQWtDQFMGKUIuSsYgF&output=csv'
+        self.url = url1 + self.ticker_name + url2 + self.startmonth + '+' + str(self.startdt.day) + '%2C+' + str(
+            self.startdt.year) + '&enddate=' + str(self.endmonth) + '+' + str(self.enddt.day) + '%2C+' + str(self.enddt.year) + url3
         #self.url = url1 + str(ticker_name) + url2 + month_name1 + '+' + str(startdt.day) + '%2C+' + str(startdt.year) + '&enddate=' + month_name2 + '+' + str(enddt.day) + '%2C+' + str(enddt.year) + url3
         return self.url
 
+    def download(self, name):
+        df = pd.read_csv(self.get_data())
+        df.to_csv(path_or_buf=str(name) + ".csv")
+        return str(name) + ".csv"
 # p = Getcsv(input())
 # p.ticker_name --> what we are looking for
 # p = Ticker()
+
 
 class Stock:
     """if a stock p euqals to Stock, then p can have p.graph, p.mean, p.blabla
@@ -82,71 +102,82 @@ class Stock:
         self.open_price = self.x.Open
         self.close_proce = self.x.Close
         self.Date = pd.to_datetime(self.x['Date'])
-        # self.__open_price = pd.  #make a list
-        # self.lowsprice
-        # self.n = pd.readdatacount row()
-
-    def graph(self):
+        self.enddate = pd.to_datetime("2017-10-01")#pd.to_datetime(self.x.Date)
+        self.std = np.std(self.x.Close)
+        self.mean = np.mean(self.x.Close)
+        self.percentile = self.x.Close.quantile([.25, .50, .75])
+        self.describe = self.x.Open.describe()
+    def graph_with_MA(self):
         """this will plot graph for every element that is the class stock"""
-
-        plt.plot(self.Date,self.close_proce[:],lw = 1.8)
+        transdat = self.x.loc[:, ["Date", "Open", "High", "Low", "Close"]]
+        transdat['Date'] = pd.to_datetime(transdat['Date'])
+        transdat.set_index('Date', inplace=True)
+        transdat["5d"] = np.round(transdat["Close"].rolling(window=5, center=False).mean(), 2)
+        #plotdat["10d"] = np.round(plotdat["Close"].rolling(window=10, center=False).mean(), 2)
+        transdat["5d"].plot(lw=2, grid=True)
+        plt.plot(transdat.index, transdat.Close, lw = 1.8)
+        #plt.plot(self.Date, self.close_proce[:], lw=1.8)
         #plt.xlim((-1, 5))
         #plt.ylim((-1, 5))
-        #plt.axis("equal")
+        # plt.axis("equal")
         plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
         plt.show()
-
         # plt.close()
         # graph(data,"test.png")
-    def candlestick(self, stick = 1, otherseries = ['5d','10d','20d','w5d',"Bol_upper","Bol_lower"]):
-        """
-        :param dat: pandas DataFrame object with datetime64 index, and float columns "Open", "High", "Low", and "Close", likely created via DataReader from "yahoo"
-        :param stick: A string or number indicating the period of time covered by a single candlestick. Valid string inputs include "day", "week", "month", and "year", ("day" default), and any numeric input indicates the number of trading days included in a period
-        :param otherseries: An iterable that will be coerced into a list, containing the columns of dat that hold other series to be plotted as lines
+    def statistics():
+        print(self.mean, self.std,self.percentile_25,self.percentile_50,self.percentile_75)
 
-        This will show a Japanese candlestick plot for stock data stored in dat, also plotting other series if passed.
-        """
+    def candlestick(self, stick=1, otherseries=['5d', '10d', '20d', 'w5d', "Bol_upper", "Bol_lower"]):
 
         # Create a new DataFrame which includes OHLC data for each period specified by stick input
         transdat = self.x.loc[:, ["Date", "Open", "High", "Low", "Close"]]
         transdat['Date'] = pd.to_datetime(transdat['Date'])
-        transdat.set_index('Date',inplace=True)
+        transdat.set_index('Date', inplace=True)
         if (type(stick) == str):
             if stick == "day":
                 plotdat = transdat
-                stick = 1 # Used for plotting
+                stick = 1  # Used for plotting
             elif stick in ["week", "month", "year"]:
                 if stick == "week":
-                    transdat["week"] = pd.to_datetime(transdat.index).map(lambda x: x.isocalendar()[1]) # Identify weeks
+                    transdat["week"] = pd.to_datetime(transdat.index).map(
+                        lambda x: x.isocalendar()[1])  # Identify weeks
                 elif stick == "month":
-                    transdat["month"] = pd.to_datetime(transdat.index).map(lambda x: x.month) # Identify months
-                transdat["year"] = pd.to_datetime(transdat.index).map(lambda x: x.isocalendar()[0]) # Identify years
-                grouped = transdat.groupby(list(set(["year",stick]))) # Group by year and other appropriate variable
-                plotdat = pd.DataFrame({"Open": [], "High": [], "Low": [], "Close": []}) # Create empty data frame containing what will be plotted
+                    transdat["month"] = pd.to_datetime(transdat.index).map(
+                        lambda x: x.month)  # Identify months
+                transdat["year"] = pd.to_datetime(transdat.index).map(
+                    lambda x: x.isocalendar()[0])  # Identify years
+                # Group by year and other appropriate variable
+                grouped = transdat.groupby(list(set(["year", stick])))
+                # Create empty data frame containing what will be plotted
+                plotdat = pd.DataFrame({"Open": [], "High": [], "Low": [], "Close": []})
                 for name, group in grouped:
-                    plotdat = plotdat.append(pd.DataFrame({"Open": group.iloc[0,0],
-                                                "High": max(group.High),
-                                                "Low": min(group.Low),
-                                                "Close": group.iloc[-1,3]},
-                                               index = [group.index[0]]))
-                if stick == "week": stick = 5
-                elif stick == "month": stick = 30
-                elif stick == "year": stick = 365
+                    plotdat = plotdat.append(pd.DataFrame({"Open": group.iloc[0, 0],
+                                                           "High": max(group.High),
+                                                           "Low": min(group.Low),
+                                                           "Close": group.iloc[-1, 3]},
+                                                          index=[group.index[0]]))
+                if stick == "week":
+                    stick = 5
+                elif stick == "month":
+                    stick = 30
+                elif stick == "year":
+                    stick = 365
 
         elif (type(stick) == int and stick >= 1):
             transdat["stick"] = [np.floor(i / stick) for i in range(len(transdat.index))]
             grouped = transdat.groupby("stick")
-            plotdat = pd.DataFrame({"Open": [], "High": [], "Low": [], "Close": []}) # Create empty data frame containing what will be plotted
+            # Create empty data frame containing what will be plotted
+            plotdat = pd.DataFrame({"Open": [], "High": [], "Low": [], "Close": []})
             for name, group in grouped:
-                plotdat = plotdat.append(pd.DataFrame({"Open": group.iloc[0,0],
-                                            "High": max(group.High),
-                                            "Low": min(group.Low),
-                                            "Close": group.iloc[-1,3]},
-                                           index = [group.index[0]]))
+                plotdat = plotdat.append(pd.DataFrame({"Open": group.iloc[0, 0],
+                                                       "High": max(group.High),
+                                                       "Low": min(group.Low),
+                                                       "Close": group.iloc[-1, 3]},
+                                                      index=[group.index[0]]))
 
         else:
-            raise ValueError('Valid inputs to argument "stick" include the strings "day", "week", "month", "year", or a positive integer')
-
+            raise ValueError(
+                'Valid inputs to argument "stick" include the strings "day", "week", "month", "year", or a positive integer')
 
         mondays = WeekdayLocator(byweekday=MO)        # major ticks on the mondays
         alldays = DayLocator()              # minor ticks on the days
@@ -158,8 +189,8 @@ class Stock:
         fig.subplots_adjust(bottom=0.2)
         if plotdat.index[-1] - plotdat.index[0] < pd.Timedelta('730 days'):
             ax.xaxis.set_major_locator(mondays)
-            #ax.xaxis.set_major_locator(alldays)
-            #ax.xaxis.set_minor_locator(alldays)
+            # ax.xaxis.set_major_locator(alldays)
+            # ax.xaxis.set_minor_locator(alldays)
             ax.xaxis.set_major_formatter(weekFormatter)
 
         else:
@@ -170,33 +201,74 @@ class Stock:
         # Create the candelstick chart
 
         candlestick_ohlc(ax, list(zip(list(date2num(plotdat.index.tolist())), plotdat["Open"].tolist(), plotdat["High"].tolist(),
-                          plotdat["Low"].tolist(), plotdat["Close"].tolist())),
-                          colorup = "green", colordown = "red", width = stick * .6, alpha = 0.5)
+                                      plotdat["Low"].tolist(), plotdat["Close"].tolist())),
+                         colorup="green", colordown="red", width=stick * .6, alpha=0.5)
 
+        plotdat["5d"] = np.round(plotdat["Close"].rolling(window=5, center=False).mean(), 2)
+        plotdat["10d"] = np.round(plotdat["Close"].rolling(window=10, center=False).mean(), 2)
+        plotdat["20d"] = np.round(plotdat["Close"].rolling(window=20, center=False).mean(), 2)
+        plotdat["50d"] = np.round(plotdat["Close"].rolling(window=50, center=False).mean(), 2)
+        plotdat["200d"] = np.round(plotdat["Close"].rolling(window=200, center=False).mean(), 2)
 
-        plotdat["5d"] = np.round(plotdat["Close"].rolling(window = 5, center = False).mean(), 2)
-        plotdat["10d"] = np.round(plotdat["Close"].rolling(window = 10, center = False).mean(), 2)
-        plotdat["20d"] = np.round(plotdat["Close"].rolling(window = 20, center = False).mean(), 2)
-        plotdat["50d"] = np.round(plotdat["Close"].rolling(window = 50, center = False).mean(), 2)
-        plotdat["200d"] = np.round(plotdat["Close"].rolling(window = 200, center = False).mean(), 2)
+        plotdat['Bol_upper'] = pd.rolling_mean(
+            plotdat['Close'], window=5) + 2 * pd.rolling_std(plotdat['Close'], 5, min_periods=3)
+        plotdat['Bol_lower'] = pd.rolling_mean(
+            plotdat['Close'], window=20) - 2 * pd.rolling_std(plotdat['Close'], 20, min_periods=20)
+        plotdat['Bol_BW'] = ((plotdat['Bol_upper'] - plotdat['Bol_lower']) / plotdat['20d']) * 100
+        # plotdat['Bol_BW_200MA'] = pd.rolling_mean(plotdat['Bol_BW'], window=50)#cant get the 200 daa
+        # plotdat['Bol_BW_200MA'] = plotdat['Bol_BW_200MA'].fillna(method='backfill')##?? ,may not be good
 
-        plotdat['Bol_upper'] = pd.rolling_mean(plotdat['Close'], window=5) + 2* pd.rolling_std(plotdat['Close'], 5, min_periods=3)
-        plotdat['Bol_lower'] = pd.rolling_mean(plotdat['Close'], window=20) - 2* pd.rolling_std(plotdat['Close'], 20, min_periods=20)
-        plotdat['Bol_BW'] = ((plotdat['Bol_upper'] - plotdat['Bol_lower'])/plotdat['20d'])*100
-        #plotdat['Bol_BW_200MA'] = pd.rolling_mean(plotdat['Bol_BW'], window=50)#cant get the 200 daa
-        #plotdat['Bol_BW_200MA'] = plotdat['Bol_BW_200MA'].fillna(method='backfill')##?? ,may not be good
-
-        plotdat["w5d"] = plotdat["Close"].ewm(span= 5,adjust = False).mean()
+        plotdat["w5d"] = plotdat["Close"].ewm(span=5, adjust=False).mean()
         # Plot other series (such as moving averages) as lines
         if otherseries != None:
             if type(otherseries) != list:
                 otherseries = [otherseries]
-            plotdat.loc[: , otherseries].plot(ax = ax, lw = 2, grid = True)
-
+            plotdat.loc[:, otherseries].plot(ax=ax, lw=2, grid=True)
 
         ax.xaxis_date()
         ax.autoscale_view()
         #ax.fill_between(ax.xaxis(),plotdat.loc[:,['Bol_lower']], plotdat.loc[:,['Bol_upper']])
         plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
         plt.show()
+
+
+
+
+class Predict(Stock):
+    def __init__(self,csvfile="GOOG.csv"):
+        Stock.__init__(self)
+
+    def predict_linear(self, date):
+        linear_mod = linear_model.LinearRegression()
+        dates = np.reshape(date2num(self.Date.tolist()), (len(self.Date), 1))  # converting to matrix of n X 1
+        #dates = np.reshape(self.x.Date.tolist()), (len(self.x.Date), 1))
+        # dates = self.x.Date
+        # date2 = []
+        # for row in dates:
+        #     date2.append(int(row[0].split('-')[0]))
+        # date2 = np.reshape(date2, (len(date2), 1))
+        prices = np.reshape(self.close_proce, (len(self.close_proce), 1))
+        linear_mod.fit(dates, prices)  # fitting the data points in the model
+        #x = date2num(pd.to_datetime(date)) - date2num(self.enddate)
+        x = pd.to_datetime(date) - self.enddate
+        predicted_price = linear_mod.predict(736460+1000)
+        plt.scatter(dates, prices, color='red')  # plotting the initial datapoints
+    # plotting the line made by linear regression
+        plt.plot(dates, linear_mod.predict(dates), color='blue', linewidth=3)
+        plt.ylabel("")
+        plt.xlabel("")
+        plt.show()
+        print(linear_mod.score(dates, prices),predicted_price[0][0], linear_mod.coef_[0][0], linear_mod.intercept_[0])
+        print(prices[-1])
+        
 menu()
+
+#
+# predicted_price, coefficient, constant , score = predict_price(dates,prices,x)
+#
+#
+#
+# print ("The stock price for the date: {} is :".format(user_input)  ,str(predicted_price))
+# print ("The regression coefficient is ",str(coefficient),", and the constant is ", str(constant))
+# print ("the relationship equation between dates and prices is: price = ",str(coefficient),"* date + ",str(constant))
+# print("The RMSE value is :", str(score))
