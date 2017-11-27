@@ -27,20 +27,15 @@ def menu_1():
     printBox('Stock Analysis - Choose your stock' , showBottomBorder = False)
     printBox('Are you ready to start?', '-' * 21,\
              'Enter any key(except 1) to continue', '-' * 21,\
-             'Enter 1 to quit' ,showBottomBorder = True)
-    printSelTitle('TASK1'), printSelTitle('TASK2'),\
-            printSelTitle('TASK3'), printSelTitle('TASK4'),\
-            printSelTitle('TASK5'), print("X")
-    printSelCheck(), printSelCheck(), printSelCheck(),\
-                     printSelCheck(), printSelCheck(), print("X")
+             'Enter 1 to quit' ,showBottomBorder = False)
     printBorder()
     p = input()
     if p == '1':
         printBox('Are you sure?', '-' * 21,\
         'press 1 to continue', '-' * 21,\
         'press any key to choose again(except 1)', showBottomBorder = True)
-        p = input()
-        if int(p) == 1:
+        p = str(input())
+        if p == '1':
             print("\nThank you, hope you enjoyed our software!\n")
         else:
             menu_1()
@@ -48,15 +43,14 @@ def menu_1():
         menu_2()
 def menu_2():
     printBox('Stock Analysis',showBottomBorder = False)
-    printBox('To analyze:',showBottomBorder = False)
-    printBox('1.Enter the name stock:', '-' * 21,\
+    printBox('To analyze:' , '-' *21,\
+             '1.Enter the name stock:', '-' * 21,\
              '2.Enter the name of the company:' , '-' * 21,\
-             '0.Quit.',showBottomBorder = False)
-    printBox('To predict:', showBottomBorder = False)
-    printBox('3.Enter the name stock:', '-' * 21,\
+             'To predict:','-' * 21,\
+             '3.Enter the name stock:', '-' * 21,\
              '4.Enter the name of the company:' , '-' * 21,\
              '0.Quit.',showBottomBorder = False)
-    printBox('please enter your option:', '-' * 21, showBottomBorder = True)
+    printBox('please enter your option:', '-' * 21, showBottomBorder = False)
     p = str(input())
     if p == '1':
         menu_3()
@@ -102,9 +96,9 @@ def menu_5():
     printBox('Are you sure?', '-' * 21,\
     'press 1 to continue', '-' * 21,\
     'press any key to choose again(except 1)',showBottomBorder = True)
-    p = input()
-    if int(p) == 1:
-        print("XXX  Thank you, hope you enjoyed our software! XXXXX")
+    p = str(input())
+    if p == '1':
+        print("Thank you, hope you enjoyed our software!")
     else:
         menu_2()
 
@@ -259,7 +253,10 @@ def menu_14():
             menu_14()
 
 #def menu_7():searching company name --> menu_9
-#def menu_17(): stock name  --> menu_9
+def menu_17():
+    """ stock name"""
+    print(Ticker(name, condition = True).a1)
+
 #def menu_10():graph it
 #def menu_11():mean
 #def menu_12():add a new stock compare
@@ -342,9 +339,3 @@ def menu_22():
             menu_22()
     return predict_date
 #def menu_23(): predict
-
-
-
-
-
-menu_1()
