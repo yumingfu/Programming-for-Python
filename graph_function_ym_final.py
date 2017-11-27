@@ -292,7 +292,7 @@ class Predict(Stock):
 
 
 
-punctuation = ['`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
+punctuation = [' ','`','~','!','@','#','$','%','^','&','*','(',')','-','_','=','+','[',']','{','}','|',';',':','"',"'",',','.','/','<','>','?']
 letter = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
 data = pd.read_csv("http://www.nasdaq.com/screening/companies-by-name.aspx?letter=0&exchan0ge=nasdaq&render=download")
 
@@ -415,7 +415,7 @@ def menu_5():
         menu_2()
 
 def menu_6(ticker = "419"):
-    printBox('Please enter the start year for the stock(in format YYYY):','-' * 21,\
+    printBox('Please enter the start year for the stock(format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
     Y = input()
     for i in punctuation:
@@ -425,7 +425,7 @@ def menu_6(ticker = "419"):
     if Y == '0':
         menu_2()
     elif len(str(Y)) == 4 and int(Y) < 2018:
-        printBox('Please enter the start month for the stock(in format MM):','-' * 21,\
+        printBox('Please enter the start month for the stock(format MM):','-' * 21,\
         'press 0 to go back!', showBottomBorder = True)
         printBox('{}-MM-DD'.format(Y),showBottomBorder = True)
         M = input()
@@ -436,7 +436,7 @@ def menu_6(ticker = "419"):
         if M == '0':
             menu_2()
         elif len(str(M)) == 2 and 0 < int(M) < 13:
-            printBox('Please enter the start day for the stock(in format DD):','-' * 21,\
+            printBox('Please enter the start day for the stock(format DD):','-' * 21,\
             'press 0 to go back!')
             printBox('{}-{}-DD'.format(Y,M), showBottomBorder = True)
             D = input()
@@ -447,9 +447,29 @@ def menu_6(ticker = "419"):
             if D == '0':
                 menu_2()
             elif len(str(D)) == 2 and 0 < int(D) < 32:
-                start_date = Y + '-' + M +'-' + D
-                printBox('{}-{}-{}'.format(Y,M,D))
-                menu_9(ticker,Y,M,D)
+                try:
+                    if M == '01' or '03' or '05' or '07' or '08' or '10' or '12':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_9(ticker,Y,M,D)
+                except:
+                    go_back_6()
+            elif len(str(D)) == 2 and 0 < int(D) < 31:
+                try:
+                    if M == '04' or '06' or '09' or '11':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_9(ticker,Y,M,D)
+                except:
+                    go_back_6()
+            elif len(str(D)) == 2 and 0 < int(D) < 30:
+                try:
+                    if M == '02':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_9(ticker,Y,M,D)
+                except:
+                    go_back_6()
             else:
                 go_back_6()
         else:
@@ -468,7 +488,7 @@ def go_back_6():
         menu_6()
 
 def menu_9(ticker = "419",Y = "2017",M = "09", D = "09"  ):
-    printBox('Please enter the end year for the stock(in format YYYY):','-' * 21,\
+    printBox('Please enter the end year for the stock(format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
     y = input()
     for i in punctuation:
@@ -478,7 +498,7 @@ def menu_9(ticker = "419",Y = "2017",M = "09", D = "09"  ):
     if y == '0':
         menu_2()
     elif len(str(y)) == 4 and int(y) < 2018:
-        printBox('Please enter the end month for the stock(in format MM):','-' * 21,\
+        printBox('Please enter the end month for the stock(format MM):','-' * 21,\
         'press 0 to go back!')
         printBox('{}-MM-DD'.format(y), showBottomBorder = True)
         m = input()
@@ -489,7 +509,7 @@ def menu_9(ticker = "419",Y = "2017",M = "09", D = "09"  ):
         if m == '0':
             menu_2()
         elif len(str(m)) == 2 and 0 < int(m) and int(m) < 13:
-            printBox('Please enter the end day for the stock(in format DD):','-' * 21,\
+            printBox('Please enter the end day for the stock(format DD):','-' * 21,\
             'press 0 to go back!', showBottomBorder = False)
             printBox('{}-{}-DD'.format(y,m), showBottomBorder = True)
             d = input()
@@ -499,11 +519,31 @@ def menu_9(ticker = "419",Y = "2017",M = "09", D = "09"  ):
                 d = d.replace(i,"")
             if d == '0':
                 menu_2()
-            elif len(str(d)) == 2 and 0 < int(d) < 32:
-                end_date = y + '-' + m +'-' + d
-                printBox('{}-{}-{}'.format(y,m,d), showBottomBorder = True)
+            elif len(str(D)) == 2 and 0 < int(D) < 32:
+                try:
+                    if M == '01' or '03' or '05' or '07' or '08' or '10' or '12':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_8(ticker,Y,M,D,y,m,d)
+                except:
+                    menu_9(ticker,Y,M,D)
+            elif len(str(D)) == 2 and 0 < int(D) < 31:
+                try:
+                    if M == '04' or '06' or '09' or '11' :
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_8(ticker,Y,M,D,y,m,d)
+                except:
+                    menu_9(ticker,Y,M,D)
+            elif len(str(D)) == 2 and 0 < int(D) < 30:
+                try:
+                    if M == '02':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_8(ticker,Y,M,D,y,m,d)
+                except:
+                    menu_9(ticker,Y,M,D)
                 #return end_date
-                menu_8(ticker,Y,M,D,y,m,d)
             else:
                 printBox('Please enter it in correct format!','-' * 21,\
                 'press any key to go back!', showBottomBorder = True)
@@ -763,7 +803,7 @@ def menu_19_2(p):
 
 
 def menu_20(ticker = "419"):
-    printBox('Please enter the start year for the stock(in format YYYY):','-' * 21,\
+    printBox('Please enter the start year for the stock(format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
     Y = input()
     for i in punctuation:
@@ -773,7 +813,7 @@ def menu_20(ticker = "419"):
     if Y == '0':
         menu_2()
     elif len(str(Y)) == 4 and int(Y) < 2018:
-        printBox('Please enter the start month for the stock(in format MM):','-' * 21,\
+        printBox('Please enter the start month for the stock(format MM):','-' * 21,\
         'press 0 to go back!', showBottomBorder = True)
         printBox('{}-MM-DD'.format(Y),showBottomBorder = True)
         M = input()
@@ -784,7 +824,7 @@ def menu_20(ticker = "419"):
         if M == '0':
             menu_2()
         elif len(str(M)) == 2 and 0 < int(M) < 13:
-            printBox('Please enter the start day for the stock(in format DD):','-' * 21,\
+            printBox('Please enter the start day for the stock(format DD):','-' * 21,\
             'press 0 to go back!')
             printBox('{}-{}-DD'.format(Y,M), showBottomBorder = True)
             D = input()
@@ -795,9 +835,29 @@ def menu_20(ticker = "419"):
             if D == '0':
                 menu_2()
             elif len(str(D)) == 2 and 0 < int(D) < 32:
-                start_date = Y + '-' + M +'-' + D
-                printBox('{}-{}-{}'.format(Y,M,D))
-                menu_21(ticker,Y,M,D)
+                try:
+                    if M == '01' or '03' or '05' or '07' or '08' or '10' or '12':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_21(ticker,Y,M,D)
+                except:
+                    go_back_20()
+            elif len(str(D)) == 2 and 0 < int(D) < 31:
+                try:
+                    if M == '04' or '06' or '09' or '11' :
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_21(ticker,Y,M,D)
+                except:
+                    go_back_20()
+            elif len(str(D)) == 2 and 0 < int(D) < 30:
+                try:
+                    if M == '02':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_21(ticker,Y,M,D)
+                except:
+                    go_back_20()
             else:
                 go_back_20()
         else:
@@ -816,7 +876,7 @@ def go_back_20():
         menu_20()
 
 def menu_21(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
-    printBox('Please enter the end year for the stock(in format YYYY):','-' * 21,\
+    printBox('Please enter the end year for the stock(format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
     y = input()
     for i in punctuation:
@@ -826,7 +886,7 @@ def menu_21(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
     if y == '0':
         menu_2()
     elif len(str(y)) == 4 and int(y) < 2018:
-        printBox('Please enter the end month for the stock(in format MM):','-' * 21,\
+        printBox('Please enter the end month for the stock(format MM):','-' * 21,\
         'press 0 to go back!')
         printBox('{}-MM-DD'.format(y), showBottomBorder = True)
         m = input()
@@ -837,7 +897,7 @@ def menu_21(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
         if m == '0':
             menu_2()
         elif len(str(m)) == 2 and 0 < int(m) < 13:
-            printBox('Please enter the end day for the stock(in format DD):','-' * 21,\
+            printBox('Please enter the end day for the stock(format DD):','-' * 21,\
             'press 0 to go back!', showBottomBorder = False)
             printBox('{}-{}-DD'.format(y,m), showBottomBorder = True)
             d = input()
@@ -847,11 +907,31 @@ def menu_21(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
                 d = d.replace(i,"")
             if d == '0':
                 menu_2()
-            elif len(str(d)) == 2 and 0 < int(d) < 32:
-                end_date = y + '-' + m +'-' + d
-                printBox('{}-{}-{}'.format(y,d,m), showBottomBorder = True)
+            elif len(str(D)) == 2 and 0 < int(D) < 32:
+                try:
+                    if M == '01' or '03' or '05' or '07' or '08' or '10' or '12':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_pred(ticker,Y,D,M,y,d,m)
+                except:
+                    menu_21(ticker,Y,M,D)
+            elif len(str(D)) == 2 and 0 < int(D) < 31:
+                try:
+                    if M == '04' or '06' or '09' or '11' :
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_pred(ticker,Y,D,M,y,d,m)
+                except:
+                    menu_21(ticker,Y,M,D)
+            elif len(str(D)) == 2 and 0 < int(D) < 30:
+                try:
+                    if M == '02':
+                        start_date = Y + '-' + M +'-' + D
+                        printBox('{}-{}-{}'.format(Y,M,D))
+                        menu_pred(ticker,Y,D,M,y,d,m)
+                except:
+                    menu_21(ticker,Y,M,D)
                 #return end_date
-                menu_pred(ticker,Y,D,M,y,d,m)
             else:
                 printBox('Please enter it in correct format!','-' * 21,\
                 'press any key to go back!', showBottomBorder = True)
