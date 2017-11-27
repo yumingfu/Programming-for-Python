@@ -30,7 +30,7 @@ def menu():
     #print(Companylist("Apple", case = True).a1)
     #Stock(Csvfile("GOOG",timestart = "2017-05-01", timeend = "2017-07-31").download("Ishaan3")).candlestick()
     #Predict(Csvfile("GOOG", timestart="2017-09-01", timeend="2017-10-01").get_data()).predict("2017-11-01")
-    Stock(Csvfile("GOOG",timestart = "2016-01-01", timeend = "2017-01-25").download("dummy")).graph_with_bb()
+    Stock(Csvfile("GOOG",timestart = "2016-01-01", timeend = "2017-01-25").download("dummy")).graph_without_ti()
 
 class Ticker:
     """Self.correct_ticker_name ()
@@ -132,7 +132,7 @@ class Stock:
         transdat = self.x.loc[:, ["Date", "Open", "High", "Low", "Close"]]
         transdat['Date'] = pd.to_datetime(transdat['Date'])
         transdat.set_index('Date', inplace=True)
-        plt.plot(transdat.index, transdat.Close, lw = 1.8,grid = True ,lable = 'Price')
+        plt.plot(transdat.index, transdat.Close, lw = 1.8)
         plt.legend()
         plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
         plt.show()
@@ -467,7 +467,7 @@ def go_back_6():
     else:
         menu_6()
 
-def menu_9(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
+def menu_9(ticker = "419",Y = "2017",M = "09", D = "09"  ):
     printBox('Please enter the end year for the stock(in format YYYY):','-' * 21,\
     'press 0 to go back!', showBottomBorder = True)
     y = input()
@@ -488,7 +488,7 @@ def menu_9(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
             m = m.replace(i,"")
         if m == '0':
             menu_2()
-        elif len(str(m)) == 2 and 0 < int(m) < 13:
+        elif len(str(m)) == 2 and 0 < int(m) and int(m) < 13:
             printBox('Please enter the end day for the stock(in format DD):','-' * 21,\
             'press 0 to go back!', showBottomBorder = False)
             printBox('{}-{}-DD'.format(y,m), showBottomBorder = True)
@@ -501,27 +501,33 @@ def menu_9(ticker = "419",Y = "2017",D = "09"  ,M = "09"):
                 menu_2()
             elif len(str(d)) == 2 and 0 < int(d) < 32:
                 end_date = y + '-' + m +'-' + d
-                printBox('{}-{}-{}'.format(m,y,d), showBottomBorder = True)
+                printBox('{}-{}-{}'.format(y,m,d), showBottomBorder = True)
                 #return end_date
-                menu_8(ticker,Y,D,M,y,d,m)
+                menu_8(ticker,Y,M,D,y,m,d)
             else:
                 printBox('Please enter it in correct format!','-' * 21,\
                 'press any key to go back!', showBottomBorder = True)
                 if input():
-                    menu_9()
+                    menu_9(ticker,Y,M,D)
+                else:
+                    menu_9(ticker,Y,M,D)
         else:
             printBox('Please enter it in correct format!','-' * 21,\
             'press any key to go back!', showBottomBorder = True)
             if input():
-                menu_9()
+                menu_9(ticker,Y,M,D)
+            else:
+                menu_9(ticker,Y,M,D)
     else:
         printBox('Please enter it in correct format!','-' * 21,\
         'press any key to go back!', showBottomBorder = True)
         if input():
-            menu_9()
+            menu_9(ticker,Y,M,D)
+        else:
+            menu_9(ticker,Y,M,D)
     #return end_date
 
-def menu_8(ticker,Y,D,M,y,d,m):
+def menu_8(ticker,Y,M,D,y,m,d):
     printBox('1.Visualise it in candlestick without technique indicators','-' * 21,\
     '2.Visualise it in candlestick with Moving averages!','-' * 21,\
     '3.Visualise it in candlestick with MA and Weighted MA','-' * 21,\
@@ -535,38 +541,38 @@ def menu_8(ticker,Y,D,M,y,d,m):
     p = input()
     if p == '1':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).candlestick(otherseries=None)
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).candlestick(otherseries=None)
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '2':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).candlestick(otherseries=['5d', '10d', '20d'])
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).candlestick(otherseries=['5d', '10d', '20d'])
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '3':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).candlestick(otherseries=['5d', '10d', '20d','w5d','w10d'])
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).candlestick(otherseries=['5d', '10d', '20d','w5d','w10d'])
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '4':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).candlestick(otherseries=['10d', '20d','w5d',"Bol_upper", "Bol_lower"])
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).candlestick(otherseries=['10d', '20d','w5d',"Bol_upper", "Bol_lower"])
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '5':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).candlestick(otherseries=["Bol_upper", "Bol_lower"])
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).candlestick(otherseries=["Bol_upper", "Bol_lower"])
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '6': #line
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).graph_without_ti()
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).graph_without_ti()
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '7':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).graph_with_MA()
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).graph_with_MA()
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '8':
         tickern = data.Symbol.iloc[int(ticker)]
-        Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).graph_with_bb()
-        menu_8(ticker,Y,D,M,y,d,m)
+        Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).graph_with_bb()
+        menu_8(ticker,Y,M,D,y,m,d)
     elif p == '9':
-        menu_sta(ticker,Y,D,M,y,d,m)
+        menu_sta(ticker,Y,M,D,y,m,d)
     elif p == '0':
         menu_6()
     else:
@@ -574,8 +580,8 @@ def menu_8(ticker,Y,D,M,y,d,m):
         'Press any key to go back!', showBottomBorder = True )
         p = input()
         if input:
-            menu_8(ticker,Y,D,M,y,d,m)
-def menu_sta(ticker,Y,D,M,y,d,m):
+            menu_8(ticker,Y,M,D,y,m,d)
+def menu_sta(ticker,Y,M,D,y,m,d):
     printBox('1. Describe statistics', '-' * 21,\
     '2.Mean of the period', '-' * 21,\
     '3.Quantile', '-' * 21,\
@@ -585,36 +591,36 @@ def menu_sta(ticker,Y,D,M,y,d,m):
     p = input()
     if p == '1':
         tickern = data.Symbol.iloc[int(ticker)]
-        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).describe)
-        menu_sta(ticker,Y,D,M,y,d,m)
+        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).describe)
+        menu_sta(ticker,Y,M,D,y,m,d)
     elif p == '2':
         tickern = data.Symbol.iloc[int(ticker)]
-        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).mean)
-        menu_sta(ticker,Y,D,M,y,d,m)
+        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).mean)
+        menu_sta(ticker,Y,M,D,y,m,d)
     elif p == '3':
         tickern = data.Symbol.iloc[int(ticker)]
-        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).percentile)
-        menu_sta(ticker,Y,D,M,y,d,m)
+        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).percentile)
+        menu_sta(ticker,Y,M,D,y,m,d)
     elif p == '4':
         tickern = data.Symbol.iloc[int(ticker)]
-        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).mean)
-        menu_sta(ticker,Y,D,M,y,d,m)
+        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).mean)
+        menu_sta(ticker,Y,M,D,y,m,d)
     elif p == '5':
         tickern = data.Symbol.iloc[int(ticker)]
-        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+D+'-'+ M, timeend = y+'-'+d+'-'+ m).download(str(tickern))).coef)
-        menu_sta(ticker,Y,D,M,y,d,m)
+        print(Stock(Csvfile(str(tickern),timestart = Y+'-'+M+'-'+ D, timeend = y+'-'+m+'-'+ d).download(str(tickern))).coef)
+        menu_sta(ticker,Y,M,D,y,m,d)
 
     elif p == '0':
-        menu_8(ticker,Y,D,M,y,d,m)
+        menu_8(ticker,Y,M,D,y,m,d)
 
     else:
         printBox('you can only choose from given number!',
         'Enter any key to go back!', showBottomBorder = True )
         p = input()
         if p:
-            menu_sta()
+            menu_sta(ticker,Y,M,D,y,m,d)
         else:
-            menu_sta()
+            menu_sta(ticker,Y,M,D,y,m,d)
 
 def menu_14():
     printBox('1. only graph the time series', '-' * 21,\
@@ -637,7 +643,7 @@ def menu_14():
 def menu_7(p):
     print(Companylist(p, case=False).a1)
     print("Is the company there?")
-    ticker = input("If yes please enter the index number of the stock, if you see an empty list \n \
+    ticker = input("If yes please enter the index number of the stock, if you see \n an empty list \
     or your stock is not here please enter the world: back to try again: ")
     if ticker == "back":
         menu_4_1()
@@ -646,7 +652,7 @@ def menu_7(p):
 def menu_7_1(p):
     print(Companylist(p, case= True).a1)
     print("Is the company there?")
-    ticker = input("If yes please enter the index number of the stock, if you see an empty list \n \
+    ticker = input("If yes please enter the index number of the stock, if you see \n an empty list \
     or your stock is not here please enter the world: back to try again: ")
     if ticker == "back":
         menu_4_1()
@@ -657,7 +663,7 @@ def menu_17(name):
     """ stock name"""
     print(Ticker(name, condition = True).a1)
     print("Is your stock there?")
-    ticker = input("If yes please enter the index number of the stock, if you see an empty list \n \
+    ticker = input("If yes please enter the index number of the stock, if you see \n an empty list \
     or your stock is not here please enter back to try again: ")
     if ticker == "back":
         menu_3_1()
@@ -667,19 +673,12 @@ def menu_17_1(name):
     """ stock name"""
     print(Ticker(name, condition = False).a1)
     print("Is your stock there?")
-    ticker = input("if yes Please enter the index number of the stock, or enter back to enter the ticker name again")
+    ticker = input("if yes Please enter the index number of the stock, or enter back \n to enter the ticker name again")
     if ticker == "back":
         menu_3_1()
     else:
         menu_6(ticker)
-#def menu_10():graph it
-#def menu_11():mean
-#def menu_12():add a new stock compare
-#def menu_13():
-#def menu_15():only graph series
-#def menu_16():
-#def menu_20(): stock name --> menu_22
-#def menu_21(): company name --> menu_22
+
 def menu_18():
     printBox('Please enter the stock name:','-' * 21,\
     'press 0 to go back!',showBottomBorder = True)
@@ -921,4 +920,4 @@ def menu_pred(ticker,Y,D,M,y,d,m):
 #def menu_23(): predict
 
 menu_1()
-# menu()
+#menu()
